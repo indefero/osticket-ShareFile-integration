@@ -1,0 +1,13 @@
+<phpunit bootstrap="bootstrap.php">
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile</directory>
+			<exclude>
+				<directory suffix=".php">C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\test</directory>
+				<directory suffix=".php">C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\test\tests</directory>
+				<directory suffix=".php">C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\PHPMailer</directory>
+				<file>C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\settings.php</file>
+			</exclude>
+		</whitelist>
+	</filter>
+</phpunit>

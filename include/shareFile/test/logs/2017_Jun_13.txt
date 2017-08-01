@@ -1,0 +1,57 @@
+[07:27 PM] [WARN] TEST1
+[07:27 PM] [ERROR] TEST2
+[07:27 PM] [INFO] Ticket Pulled from email: 31337 ShareID: se35e6852b9546f18
+[07:27 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\ProcessEmails> Invalid email recieved
+[07:27 PM] [DEBUG] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\ProcessEmails> EMAIL_PROCESS_ERROR_WRONG_DEVPROD
+[07:27 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\EmailPOP3SendMail>
+ Message could not be sent. Mailer Error: The following From address failed: shareFileIncomingDEV@keystonecollects.com : MAIL FROM command failed,Message submission rate for this client has exceeded the configured limit
+,421,4.4.2SMTP server error: MAIL FROM command failed Detail: Message submission rate for this client has exceeded the configured limit
+ SMTP code: 421 Additional SMTP info: 4.4.2SMTP server error: MAIL FROM command failed Detail: Message submission rate for this client has exceeded the configured limit
+ SMTP code: 421 Additional SMTP info: 4.4.2
+    Trying again; 5 Attempts remaining
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\EmailPOP3SendMail>
+ Message could not be sent. Mailer Error: The following From address failed: shareFileIncomingDEV@keystonecollects.com : MAIL FROM command failed,,,SMTP server error: MAIL FROM command failedSMTP server error: MAIL FROM command failed
+    Trying again; 4 Attempts remaining
+[07:28 PM] [INFO] Ticket Pulled from email: 31337 ShareID: se35e6852b9546f18
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\ProcessEmails> Invalid email recieved
+[07:28 PM] [INFO] Ticket Pulled from email: 31337 ShareID: s130b9d15090466ca
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\shareFileFunctions.php :: shareFile\CurlProgressFunction> Size of file exceeds defined maximum in php.ini - post_max_size = 8388608
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\shareFileFunctions.php :: shareFile\CurlExecute>
+Curl error: Callback aborted
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\shareFileFunctions.php :: shareFile\DownloadFilesFromShare>
+   File couldn't be downloaded from share with ID: s130b9d15090466ca
+   The file is too large
+ ErrorNO: 42
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\UploadShareFilesToOsTicket>
+ Couldn't get file from share ID: s130b9d15090466ca
+    for ticket#: 31337
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\ProcessEmails> Invalid email recieved
+[07:28 PM] [INFO] Ticket Pulled from email: 31337 ShareID: se35e6852b9546f18
+[07:28 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\EmailPOP3SendMail>
+ Message could not be sent. Mailer Error: The following From address failed: shareFileIncomingDEV@keystonecollects.com : MAIL FROM command failed,Message submission rate for this client has exceeded the configured limit
+,421,4.4.2SMTP server error: MAIL FROM command failed Detail: Message submission rate for this client has exceeded the configured limit
+ SMTP code: 421 Additional SMTP info: 4.4.2SMTP server error: MAIL FROM command failed Detail: Message submission rate for this client has exceeded the configured limit
+ SMTP code: 421 Additional SMTP info: 4.4.2
+    Trying again; 5 Attempts remaining
+[07:29 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\EmailPOP3SendMail>
+ Message could not be sent. Mailer Error: The following From address failed: shareFileIncomingDEV@keystonecollects.com : MAIL FROM command failed,,,SMTP server error: MAIL FROM command failedSMTP server error: MAIL FROM command failed
+    Trying again; 4 Attempts remaining
+[07:29 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\EmailPOP3SendMail>
+ Message could not be sent. Mailer Error: The following From address failed: shareFileIncomingDEV@keystonecollects.com : MAIL FROM command failed,Message submission rate for this client has exceeded the configured limit
+,421,4.4.2SMTP server error: MAIL FROM command failed Detail: Message submission rate for this client has exceeded the configured limit
+ SMTP code: 421 Additional SMTP info: 4.4.2SMTP server error: MAIL FROM command failed Detail: Message submission rate for this client has exceeded the configured limit
+ SMTP code: 421 Additional SMTP info: 4.4.2
+    Trying again; 3 Attempts remaining
+[07:29 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\EmailPOP3SendMail>
+ Message could not be sent. Mailer Error: The following From address failed: shareFileIncomingDEV@keystonecollects.com : MAIL FROM command failed,,,SMTP server error: MAIL FROM command failedSMTP server error: MAIL FROM command failed
+    Trying again; 2 Attempts remaining
+[07:30 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\handleEmails.php :: shareFile\ProcessEmails> Invalid email recieved
+[07:30 PM] [INFO] Ticket Pulled from email: 31337 ShareID: se35e6852b9546f18
+[07:30 PM] [INFO] Ticket Pulled from email: 31337 ShareID: s130b9d15090466ca
+[07:30 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\shareFileFunctions.php :: shareFile\CurlProgressFunction> Size of file exceeds defined maximum in php.ini - post_max_size = 8388608
+[07:30 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\shareFileFunctions.php :: shareFile\CurlExecute>
+Curl error: Callback aborted
+[07:30 PM] [WARN] <C:\Users\RALLOYD\PHP\projects\shareFile\include\shareFile\shareFileFunctions.php :: shareFile\DownloadFilesFromShare>
+   File couldn't be downloaded from share with ID: s130b9d15090466ca
+   The file is too large
+ ErrorNO: 42
