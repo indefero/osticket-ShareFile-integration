@@ -25,11 +25,11 @@ namespace shareFile;
        const EMAIL_FATAL_TO_ADMIN = true;
 
 //Variables for emails sent from email account
-    //basic message sent when sending an email regarding an uploaded file
-    const EMAIL_SEND_MESSAGE_SUCCESS_TAG = "[FILE UPLOAD SUCCESS]";
+    //basic message subject sent when sending an email regarding an uploaded file
+    const EMAIL_SEND_SUBJECT_SUCCESS = "Kit File Uploaded";
 
-    //basic message sent when sending an email regarding an uploaded file Failed
-    const EMAIL_SEND_MESSAGE_FAIL_TAG    = "[FILE UPLOAD FAILURE]";
+    //basic message subject sent when sending an email regarding an uploaded file Failed
+    const EMAIL_SEND_SUBJECT_FAIL    = "Kil File Upload FAILED";
 
 //Sharefile website variables
 	//ShareFile account Info
@@ -64,7 +64,10 @@ namespace shareFile;
 
 //Path where failed emails are saved to (typically inside of the errorlog folder)
 	const EMAIL_FAIL_EXPORT_PATH   	= "C:\\inetpub\\wwwroot\\osticket\\include\\shareFile\\logs\\EmailsFailed";
+	const EMAIL_SUCCESS_EXPORT_PATH   	= "C:\\inetpub\\wwwroot\\osticket\\include\\shareFile\\logs\\EmailsProcessed";
 //boolean value that decides whether failed emails should be saved to file
 	const EMAIL_FAIL_EXPORT	        = true;
 
+//boolean value that decides whether successful emails should be saved to file
+    const EMAIL_SUCCESS_EXPORT	        = true;
 ?>

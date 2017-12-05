@@ -7,12 +7,28 @@ require_once(INCLUDE_DIR.'class.draft.php');
 require_once(INCLUDE_DIR.'class.ticket.php');
 require_once(INCLUDE_DIR.'shareFile/shareFileFunctions.php');
 require_once(INCLUDE_DIR.'shareFile/ErrorLog.php');
+require_once(INCLUDE_DIR.'shareFile/ticketAnalysis.php');
 require_once(SF_SETTINGS_PATH);
 require_once(INCLUDE_DIR.'shareFile/PHPMailer/PHPMailerAutoload.php');
 
 
 const EMAIL_PROCESS_ERROR_INVALID = 0;
 const EMAIL_PROCESS_ERROR_WRONG_DEVPROD = 1;
+
+function LockFileExists(){
+    return file_exists(SF_LOCK_FILE_PATH);
+}
+
+function LockFileCreate(){
+    file_put_contents (SF_LOCK_FILE_PATH, "Running");
+}
+
+function LockFileDelete(){
+    $returnValue = unlink(SF_LOCK_FILE_PATH);
+    if($returnValue == false){
+        C_SF_ErrorLog::WriteError("<" . __FILE__ . " :: " . __FUNCTION__ . ">\r\n Couldn't delete lock file ",  C_SF_ErrorLog::FATAL);
+    }
+}
 
 function EmailPOP3Login($host,$port,$user,$pass,$folder="INBOX",$ssl=false){
     $ssl = ($ssl==false) ? "/novalidate-cert":"";
@@ -295,17 +311,64 @@ function GetTicketAssignee($ticketID){
     return $ticket->getAssignee();
 }
 
+///returns true or false depending on reopen success
+function OpenTicketIfClosed($ticket){
+    //if ticket isn't closed, return
+    if(!$ticket->isClosed()){return true;}
+
+    return !($ticket->reopen() === false);
+}
+
+///returns true or false depending on assignment success
+function AssignTicket($ticket, $staff){
+    /*
+    assigning should automatically reopen tickets
+            see class.ticket.php 1705
+
+    if(!OpenTicketIfClosed($ticket)){
+        C_SF_ErrorLog::WriteError("<" . __FILE__ . " :: " . __FUNCTION__ . ">\r\n Couldn't reopen ticket with ID: ".$ticket->getId());
+        return false;
+    }
+    */
+
+    $ticket->assignToStaff($staff, "File has been uploaded; Reopening");
+
+    return true;
+}
+///Will return either FALSE or email string
+function GetTicketAssigneeEmailFromAnalysis($ticketID){
+    $ticket = \Ticket::lookup($ticketID);
+    if($ticket != NULL){
+        $assignee = GetLastEntry(GetSFLinkPosts(GetEntries($ticket)))->getStaff();
+        if($assignee != NULL){
+            $email = $assignee->getEmail();
+            AssignTicket($ticket, $assignee);
+            return $email;
+        }
+    }
+    return FALSE;
+}
+
 function GetTicketAssigneeEmail($ticketID){
     $staff = GetTicketAssignee($ticketID);
     $email = NULL;
     if($staff == false){
-        $email = ADMINISTRATOR_EMAIL;
+        $email = GetTicketAssigneeEmailFromAnalysis($ticketID);
+        if($email === FALSE){
+            $email = ADMINISTRATOR_EMAIL;
+        }
     }
     else{
         $email = $staff->getEmail();
     }
 
     return $email;
+}
+
+function ComposeEmailBodySuccess($ticketLink, $ticketID, $userName){
+    $returnString = "File has been successfully uploaded to Ticket #".$ticketID." for user '".$userName."''";
+    $returnString .= '<br/>Click <a href="'.$ticketLink.'"><b>Here</b><a/> to access the ticket';
+    return $returnString;
 }
 
 //returns new message ID from OSTicket or NULL
@@ -317,16 +380,39 @@ function UploadShareFilesToOsTicket($shareID, $ticketID, $message){
 		C_SF_ErrorLog::WriteError("<" . __FILE__ . " :: " . __FUNCTION__ . ">\r\n Couldn't get Ticket from ticket ID: ".$ticketID);
 		return NULL;
 	}
+    if($user==NULL){
+		C_SF_ErrorLog::WriteError("<" . __FILE__ . " :: " . __FUNCTION__ . ">\r\n User '".OST_USERNAME."' with PW '".OST_PASSWORD."' is NULL!");
+		exit("FAILED: USER IS NULL");
+	}
 
     C_SF_ErrorLog::WriteError("Attempting to upload attachment to OSTicket", C_SF_ErrorLog::INFO);
 
-	//Get file from shareFile
-	$token = GetShareFileToken();
+    $fileData = NULL;
+    $fileName = "";
+    $errorCode = 0;
+    for($attempts = 2; $attempts > 0; $attempts--){
+	   //Get file from shareFile
+	   $token = GetShareFileToken();
+	   $data = DownloadFilesFromShare($token, $shareID);
 
-	$data = DownloadFilesFromShare($token, $shareID);
+        //By default, function returns (fileData, filename)
+        //if error out, it returns (NULL, errorcode)
+	   $fileData = $data[0];
+	   $fileName = $data[1];
+       $errorCode = $data[1];
 
-	$fileData = $data[0];
-	$fileName = $data[1];
+        if($fileData == NULL){
+            //Abort extra attempts if this is a file size issue
+            if($errorCode == 1){break;}
+            if($attempts > 0){
+                $attempts -=1;
+                $errorString = "Failed Downloading files from share; Errorcode: " . $errorCode
+                . "\r\n    Trying again (" . $attempts . " Attempts remaining)";
+                C_SF_ErrorLog::WriteError($errorString, C_SF_ErrorLog::ERROR);
+            }
+        }
+        else{break;}
+    }
 
 	//Upload Response to Ticket with file attachments
 	$vars 		= array(
@@ -341,27 +427,29 @@ function UploadShareFilesToOsTicket($shareID, $ticketID, $message){
 							)
 	);
 
-    $HTML_TICKET_LINK= "<b><a href=".SERVER_ADDRESS . "/scp/tickets.php?id=".$ticketID.">Kit</a></b>";
+    $HTML_TICKET_LINK= SERVER_ADDRESS . "/scp/tickets.php?id=".$ticketID;
+    $userName = $ticket->getUser()->getName();
 
 	//If the file cannot be read, then carry on posting a message anyway
 	//if we recieved a valid ticket ID then it's clear that SOMETHNG was meant to be uploaded
 	if( ($fileData==NULL) ){
 		C_SF_ErrorLog::WriteError("<" . __FILE__ . " :: " . __FUNCTION__ . ">\r\n Couldn't get file from share ID: ".$shareID."\r\n    for ticket#: " .$ticketID);
 		$response = "";
-		if($fileName==1)		{$response = "User uploaded file to ShareFile, but OSTicket could not download it because it is too large"
+		if($errorCode==1)		{$response = "User uploaded file to ShareFile, but OSTicket could not download it because it is too large"
 												."\r\n - Helpdesk can grab the file for you";}
-		else if($fileName==2)	{$response = "User uploaded file to ShareFile, but it was flagged as Malware";}
+		else if($errorCode==2)	{$response = "User uploaded file to ShareFile, but it was flagged as Malware";}
 		else					{$response = "User Uploaded File to ShareFile, but it could not be saved to OSTicket";}
 		$vars["attachments"] = NULL;
 		$vars["response"]	 = $response;
 
-        EmailPOP3SendMail(GetTicketAssigneeEmail($ticketID), EMAIL_SEND_SUBJECT, EMAIL_SEND_MESSAGE_FAIL_TAG.
+
+        EmailPOP3SendMail(GetTicketAssigneeEmail($ticketID), EMAIL_SEND_SUBJECT_FAIL,
             " File has failed being uploaded to the following ticket, please contact help desk:".$HTML_TICKET_LINK);
 	}
     else{
         C_SF_ErrorLog::WriteError("Attempting to send email", C_SF_ErrorLog::INFO);
-        EmailPOP3SendMail(GetTicketAssigneeEmail($ticketID), EMAIL_SEND_SUBJECT, EMAIL_SEND_MESSAGE_SUCCESS_TAG.
-            " File has been uploaded to the following ticket:".$HTML_TICKET_LINK);
+        EmailPOP3SendMail(GetTicketAssigneeEmail($ticketID), EMAIL_SEND_SUBJECT_SUCCESS,
+                            ComposeEmailBodySuccess($HTML_TICKET_LINK, $ticketID, $userName));
         C_SF_ErrorLog::WriteError("Email sent", C_SF_ErrorLog::INFO);
     }
 
@@ -392,6 +480,9 @@ function ProcessEmails($mbox, $list){
 		$message = NULL;
 		if(($ticketID!=null)and($ticketID!="")and($shareID!=null)and($shareID!="")){
 			$message = UploadShareFilesToOsTicket($shareID, (int)$ticketID, $uploadMessage);
+            if(EMAIL_SUCCESS_EXPORT == true){
+				EmailExport($mbox, $messageNumber, EMAIL_SUCCESS_EXPORT_PATH);
+			}
 		}
         else{
             $message  = $data[1];

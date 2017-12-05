@@ -41,7 +41,7 @@ class SFEmailTest extends TestCase{
         $ticketID=31337;
         $HTML_TICKET_LINK= "<b><a href=".SERVER_ADDRESS . "/scp/tickets.php?id=".$ticketID.">Kit</a></b>";
         echo "Sending Email \n";
-        EmailPOP3SendMail(GetTicketAssigneeEmail($ticketID), EMAIL_SEND_SUBJECT, EMAIL_SEND_MESSAGE_SUCCESS_TAG." ".$HTML_TICKET_LINK);
+        EmailPOP3SendMail(GetTicketAssigneeEmail($ticketID), EMAIL_SEND_SUBJECT, EMAIL_SEND_SUBJECT_SUCCESS." ".$HTML_TICKET_LINK);
 
         //wait for message to post
         sleep(1);

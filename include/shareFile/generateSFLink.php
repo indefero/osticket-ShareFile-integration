@@ -10,6 +10,7 @@ require_once(INCLUDE_DIR.'class.ticket.php');
 require_once(SF_SETTINGS_PATH);
 require_once(INCLUDE_DIR.'shareFile/shareFileFunctions.php');
 require_once(INCLUDE_DIR.'shareFile/ErrorLog.php');
+require_once(INCLUDE_DIR.'shareFile/ticketAnalysis.php');
 
 function GenerateSFLinkFromTicketID($ticketID){
     $token = GetShareFileToken();
@@ -32,6 +33,41 @@ function GenerateSFLinkFromTicketID($ticketID){
 
 	return '<a href="'.$share->Uri.'">Please upload your file by clicking here</a>';
 }
+
+/*
+function ticketAnalysisTestFunction($ticketID){
+    $ticket = \Ticket::lookup($ticketID);
+    $replies = GetReplies($ticket);
+
+    echo "All Replies: <br/>";
+    $int = 0;
+    foreach($replies as $reply){
+        echo "Entry" . $int;
+        echo "<br/>";
+        echo $reply->getBody()->getClean();
+        echo "<br/>";
+        $int = $int + 1;
+    }
+
+    $int = 0;
+    echo "GetSFLinkPosts <br/>";
+    $filteredReplies = GetSFLinkPosts($replies);
+    foreach($filteredReplies as $reply){
+        echo "Entry" . $int;
+        echo "<br/>";
+        echo $reply->getBody()->getClean();
+        echo PHP_EOL;
+        $int = $int + 1;
+    }
+
+    $lastReply = GetLastReply($filteredReplies);
+    echo "Last reply: <br/>" . $lastReply->getBody();
+
+
+    $owner = GetLastEntry(GetSFLinkPosts(GetEntries($ticket)))->getStaff()->getEmail();
+    echo "Ticket owner email will be: " . $owner;
+}
+*/
 
 function GenerateSFLinkFromTicketIDWeb(){
     $UNSAFE_ticketID    = $_POST['id'];

@@ -105,10 +105,10 @@ class SFTest extends TestCase{
         $successCount=0;
         for($i=1; $i<=count($this->messagesList); $i++){
             $message = EmailParseGetMSG($this->mbox, $i);
-            if(strpos ($message, EMAIL_SEND_MESSAGE_FAIL_TAG)!=false){
+            if(strpos ($message, EMAIL_SEND_SUBJECT_FAIL)!=false){
                 $failCount+=1;
             }
-            elseif(strpos ($message, EMAIL_SEND_MESSAGE_SUCCESS_TAG)!=false){
+            elseif(strpos ($message, EMAIL_SEND_SUBJECT_SUCCESS)!=false){
                 $successCount+=1;
             }
             imap_delete($this->mbox, $i);
@@ -157,10 +157,10 @@ class SFTest extends TestCase{
         $successCount=0;
         for($i=1; $i<=count($this->messagesList); $i++){
             $message = EmailParseGetMSG($this->mbox, $i);
-            if(strpos ($message, EMAIL_SEND_MESSAGE_FAIL_TAG)!=false){
+            if(strpos ($message, EMAIL_SEND_SUBJECT_FAIL)!=false){
                 $failCount+=1;
             }
-            elseif(strpos ($message, EMAIL_SEND_MESSAGE_SUCCESS_TAG)!=false){
+            elseif(strpos ($message, EMAIL_SEND_SUBJECT_SUCCESS)!=false){
                 $successCount+=1;
             }
             imap_delete($this->mbox, $i);
